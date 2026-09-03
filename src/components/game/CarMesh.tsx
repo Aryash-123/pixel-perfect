@@ -64,7 +64,7 @@ function Wheel({
   car: CarDef;
   wheelId: string;
   position: [number, number, number];
-  spinRef?: React.RefObject<number>;
+  spinRef?: React.RefObject<number> | undefined;
   steer?: number;
 }) {
   const w = getWheel(wheelId);
@@ -113,10 +113,10 @@ export type CarMeshProps = {
   car: CarDef;
   paintId: string;
   wheelId: string;
-  spinRef?: React.RefObject<number>;
+  spinRef?: React.RefObject<number> | undefined;
   steer?: number;
   headlights?: boolean;
-  simple?: boolean;
+  simple?: boolean | undefined;
 };
 
 export function CarMesh({ car, paintId, wheelId, spinRef, steer = 0, headlights = true, simple }: CarMeshProps) {
