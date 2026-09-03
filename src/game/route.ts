@@ -67,13 +67,6 @@ const NIGHT_CITY = {
   fogNear: 60,
   fogFar: 460,
 };
-const NIGHT_HWY = {
-  top: "#070c22",
-  bottom: "#152048",
-  fog: "#0e1staging" as unknown as string,
-  fogNear: 80,
-  fogFar: 520,
-};
 
 export const RACES: RaceDef[] = [
   {
@@ -207,7 +200,7 @@ export const RACES: RaceDef[] = [
   },
 ];
 
-export const getRace = (id: string) => RACES.find((r) => r.id === id) ?? RACES[0];
+export const getRace = (id: string): RaceDef => RACES.find((r) => r.id === id) ?? RACES[0]!;
 
 /* --------------------------------------------------------------- sampling */
 
@@ -275,7 +268,7 @@ export function sampleAt(route: Route, s: number): Sample {
   const arr = route.samples;
   const clamped = Math.max(0, Math.min(route.length - 0.01, s));
   const idx = Math.min(arr.length - 1, Math.max(0, Math.floor((clamped / route.length) * arr.length)));
-  return arr[idx];
+  return arr[idx]!;
 }
 
 /** Smoothstep helper for branch blending */
@@ -322,7 +315,7 @@ export function worldPos(
   let off = 0;
   let h = 0;
   for (let i = 0; i < route.race.branches.length; i++) {
-    const b = route.race.branches[i];
+    const b = route.race.branches[i]!;
     if (s > b.start && s < b.end) {
       const which = branchSel[i] ?? "ground";
       const c = branchCentre(b, s, which);
