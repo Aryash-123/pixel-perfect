@@ -133,7 +133,7 @@ export function Scenery({ route }: { route: Route }) {
       {data.buildings.map((items, i) => (
         <Batch key={i} items={items} castShadow>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial map={texes[i]} emissiveMap={texes[i]} emissive="#ffffff" emissiveIntensity={0.55} roughness={0.8} />
+          <meshStandardMaterial map={texes[i]!} emissiveMap={texes[i]!} emissive="#ffffff" emissiveIntensity={0.55} roughness={0.8} />
         </Batch>
       ))}
 
@@ -225,7 +225,7 @@ function Ocean({ items }: { items: Placement[] }) {
       args={[undefined as unknown as THREE.BufferGeometry, undefined as unknown as THREE.Material, items.length]}
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="#0a2b4d" metalness={0.85} roughness={0.15} emissive="#0b2murky" />
+      <meshStandardMaterial color="#0a2b4d" metalness={0.85} roughness={0.15} emissive="#062038" emissiveIntensity={0.4} />
     </instancedMesh>
   );
 }
