@@ -45,7 +45,7 @@ export function Result({
           <Box
             label="BEST"
             value={best !== undefined ? fmtTime(best) : "—"}
-            tone={isRecord ? "gold" : undefined}
+            {...(isRecord ? { tone: "gold" as const } : {})}
           />
           <Box label="PAYOUT" value={`$${result.reward.toLocaleString()}`} tone="gold" />
         </div>
