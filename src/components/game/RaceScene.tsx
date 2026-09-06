@@ -497,7 +497,7 @@ function RaceLoop({
     if (Math.abs(p.lateral) > halfWidth) {
       p.lateral = Math.sign(p.lateral) * halfWidth;
       p.ho *= -0.25;
-      p.speed *= 0.9;
+      p.speed *= Math.exp(-1.6 * dt);
       p.shake = 0.35;
       p.collisions += dt;
     }
