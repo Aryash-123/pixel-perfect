@@ -31,6 +31,7 @@ type PlayerState = {
   shake: number;
   cp: number;
   collisions: number;
+  hitCd: number;
   time: number;
   started: boolean;
   finished: boolean;
