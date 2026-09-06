@@ -5,6 +5,8 @@ import { RaceSelect } from "@/components/game/screens/RaceSelect";
 import { Garage } from "@/components/game/screens/Garage";
 import { Result } from "@/components/game/screens/Result";
 import { Hud } from "@/components/game/Hud";
+import { TouchControls } from "@/components/game/TouchControls";
+
 import { RaceScene, type RaceResult } from "@/components/game/RaceScene";
 import { buildRoute, RACES } from "@/game/route";
 import { carPerformance, getCar } from "@/game/cars";
