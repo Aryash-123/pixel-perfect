@@ -97,15 +97,25 @@ export function Track({ route }: { route: Route }) {
       }
     }
 
-    let lampSide = 1;
-    for (let s = 30; s < route.length - 20; s += 44) {
+    // street lamps on BOTH sides, closer together, each casting a glow pool on the asphalt
+    const glows: Placement[] = [];
+    for (let s = 20; s < route.length - 20; s += 22) {
       const p = sampleAt(route, s);
-      const w = worldPos(route, s, lampSide * (ROAD_HALF_WIDTH + 2.4));
-      lamps.push({ pos: [w.x, w.y + 4, w.z], rotY: p.heading, scale: [1, 1, 1] });
-      lampHeads.push({ pos: [w.x - lampSide * 1.6 * Math.cos(p.heading), w.y + 7.8, w.z + lampSide * 1.6 * Math.sin(p.heading)], rotY: p.heading });
-      lampSide *= -1;
+      for (const side of [-1, 1] as const) {
+        const w = worldPos(route, s, side * (ROAD_HALF_WIDTH + 2.4));
+        lamps.push({ pos: [w.x, w.y + 4, w.z], rotY: p.heading, scale: [1, 1, 1] });
+        lampHeads.push({
+          pos: [w.x - side * 1.6 * Math.cos(p.heading), w.y + 7.8, w.z + side * 1.6 * Math.sin(p.heading)],
+          rotY: p.heading,
+        });
+        const gp = worldPos(route, s, side * (ROAD_HALF_WIDTH * 0.45));
+        glows.push({ pos: [gp.x, gp.y + 0.09, gp.z], rotY: p.heading, scale: [1, 1, 1] });
+      }
     }
 
+    // flyover deck lighting: edge light strips + glow pools along every elevated branch
+    const deckLights: Placement[] = [];
+    const deckGlows: Placement[] = [];
     for (const b of route.race.branches) {
       for (let s = b.start + 14; s < b.end - 14; s += 22) {
         const c = branchCentre(b, s, "flyover");
@@ -113,9 +123,20 @@ export function Track({ route }: { route: Route }) {
         const w = worldPos(route, s, 0);
         pillars.push({ pos: [w.x, (w.y + c.height) / 2, w.z], scale: [1.4, c.height + 0.6, 1.4] });
       }
+      for (let s = b.start + 6; s < b.end - 6; s += 12) {
+        const c = branchCentre(b, s, "flyover");
+        if (c.height < 0.6) continue;
+        const p = sampleAt(route, s);
+        for (const side of [-1, 1] as const) {
+          const w = worldPos(route, s, side * (ROAD_HALF_WIDTH - 0.4));
+          deckLights.push({ pos: [w.x, w.y + c.height + 1.9, w.z], rotY: p.heading, scale: [1, 1, 1] });
+          const gp = worldPos(route, s, side * (ROAD_HALF_WIDTH * 0.5));
+          deckGlows.push({ pos: [gp.x, gp.y + c.height + 0.1, gp.z], rotY: p.heading, scale: [1, 1, 1] });
+        }
+      }
     }
 
-    return { curbs, rails, lamps, lampHeads, pillars, reflectors, rand };
+    return { curbs, rails, lamps, lampHeads, pillars, reflectors, glows, deckLights, deckGlows, rand };
   }, [route]);
 
   /* -------------------------------------------------- signs and gantries */
