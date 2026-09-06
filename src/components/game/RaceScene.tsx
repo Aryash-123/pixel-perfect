@@ -87,6 +87,7 @@ export function RaceScene({
     shake: 0,
     cp: 0,
     collisions: 0,
+    hitCd: 0,
     time: 0,
     started: false,
     finished: false,
