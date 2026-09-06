@@ -264,12 +264,43 @@ export function buildRoute(raceId: string): Route {
 
 /* ---------------------------------------------------------------- queries */
 
+/**
+ * Continuous sample lookup: finds the two samples bracketing `s` and blends
+ * them. Snapping to the nearest sample makes motion quantise to the sample
+ * spacing, which reads as a stutter at speed.
+ */
 export function sampleAt(route: Route, s: number): Sample {
   const arr = route.samples;
-  const clamped = Math.max(0, Math.min(route.length - 0.01, s));
-  const idx = Math.min(arr.length - 1, Math.max(0, Math.floor((clamped / route.length) * arr.length)));
-  return arr[idx]!;
+  const last = arr.length - 1;
+  const clamped = Math.max(0, Math.min(route.length - 0.001, s));
+
+  // start from the uniform guess, then walk to the true bracket (segments can
+  // have slightly different step sizes)
+  let i = Math.min(last, Math.max(0, Math.floor((clamped / route.length) * arr.length)));
+  while (i > 0 && arr[i]!.s > clamped) i--;
+  while (i < last && arr[i + 1]!.s <= clamped) i++;
+
+  const a = arr[i]!;
+  const b = arr[Math.min(last, i + 1)]!;
+  const span = b.s - a.s;
+  if (span <= 1e-6) return a;
+  const t = Math.max(0, Math.min(1, (clamped - a.s) / span));
+
+  // heading is monotonic-ish here, but normalise the delta to be safe
+  let dh = b.heading - a.heading;
+  while (dh > Math.PI) dh -= Math.PI * 2;
+  while (dh < -Math.PI) dh += Math.PI * 2;
+
+  return {
+    s: clamped,
+    x: a.x + (b.x - a.x) * t,
+    z: a.z + (b.z - a.z) * t,
+    y: a.y + (b.y - a.y) * t,
+    heading: a.heading + dh * t,
+    env: t < 0.5 ? a.env : b.env,
+  };
 }
+
 
 /** Smoothstep helper for branch blending */
 const smooth = (t: number) => {
