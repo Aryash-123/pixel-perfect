@@ -31,6 +31,7 @@ type PlayerState = {
   shake: number;
   cp: number;
   collisions: number;
+  hitCd: number;
   time: number;
   started: boolean;
   finished: boolean;
@@ -86,6 +87,7 @@ export function RaceScene({
     shake: 0,
     cp: 0,
     collisions: 0,
+    hitCd: 0,
     time: 0,
     started: false,
     finished: false,
@@ -495,21 +497,27 @@ function RaceLoop({
     if (Math.abs(p.lateral) > halfWidth) {
       p.lateral = Math.sign(p.lateral) * halfWidth;
       p.ho *= -0.25;
-      p.speed *= 0.9;
+      p.speed *= Math.exp(-1.6 * dt);
       p.shake = 0.35;
       p.collisions += dt;
     }
 
-    /* ---- traffic collisions */
-    for (const v of traffic.current ?? []) {
-      if (Math.abs(v.s - p.s) < 4.6 && Math.abs(v.lateral - p.lateral) < 2.4) {
-        const closing = v.dir === -1 ? 0.35 : 0.6;
-        p.speed *= closing;
-        p.lateral += Math.sign(p.lateral - v.lateral || 1) * 1.4;
-        p.shake = 0.6;
-        p.collisions += 1;
+    /* ---- traffic collisions (one hit per contact, not once per frame) */
+    p.hitCd = Math.max(0, p.hitCd - dt);
+    if (p.hitCd === 0) {
+      for (const v of traffic.current ?? []) {
+        if (Math.abs(v.s - p.s) < 4.6 && Math.abs(v.lateral - p.lateral) < 2.4) {
+          const closing = v.dir === -1 ? 0.55 : 0.78;
+          p.speed *= closing;
+          p.lateral += Math.sign(p.lateral - v.lateral || 1) * 1.4;
+          p.shake = 0.6;
+          p.collisions += 1;
+          p.hitCd = 0.7;
+          break;
+        }
       }
     }
+
 
     /* ---- checkpoints */
     while (p.cp < route.checkpoints.length && p.s >= route.checkpoints[p.cp]!) p.cp++;
