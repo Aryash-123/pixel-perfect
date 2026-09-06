@@ -7,7 +7,7 @@ import { Result } from "@/components/game/screens/Result";
 import { Hud } from "@/components/game/Hud";
 import { RaceScene, type RaceResult } from "@/components/game/RaceScene";
 import { buildRoute, RACES } from "@/game/route";
-import { carPerformance, getCar, upgradeCost as _unusedCost } from "@/game/cars";
+import { carPerformance, getCar } from "@/game/cars";
 import {
   defaultSave,
   loadSave,
