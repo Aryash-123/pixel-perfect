@@ -502,16 +502,22 @@ function RaceLoop({
       p.collisions += dt;
     }
 
-    /* ---- traffic collisions */
-    for (const v of traffic.current ?? []) {
-      if (Math.abs(v.s - p.s) < 4.6 && Math.abs(v.lateral - p.lateral) < 2.4) {
-        const closing = v.dir === -1 ? 0.35 : 0.6;
-        p.speed *= closing;
-        p.lateral += Math.sign(p.lateral - v.lateral || 1) * 1.4;
-        p.shake = 0.6;
-        p.collisions += 1;
+    /* ---- traffic collisions (one hit per contact, not once per frame) */
+    p.hitCd = Math.max(0, p.hitCd - dt);
+    if (p.hitCd === 0) {
+      for (const v of traffic.current ?? []) {
+        if (Math.abs(v.s - p.s) < 4.6 && Math.abs(v.lateral - p.lateral) < 2.4) {
+          const closing = v.dir === -1 ? 0.55 : 0.78;
+          p.speed *= closing;
+          p.lateral += Math.sign(p.lateral - v.lateral || 1) * 1.4;
+          p.shake = 0.6;
+          p.collisions += 1;
+          p.hitCd = 0.7;
+          break;
+        }
       }
     }
+
 
     /* ---- checkpoints */
     while (p.cp < route.checkpoints.length && p.s >= route.checkpoints[p.cp]!) p.cp++;
