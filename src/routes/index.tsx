@@ -207,7 +207,9 @@ function Game() {
                 onFinish={onFinish}
               />
               <Hud route={route} onQuit={quitRace} />
+              <TouchControls />
             </>
+
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
               <p className="text-sm tracking-[0.2em] text-[color:var(--vc-dim)]">
