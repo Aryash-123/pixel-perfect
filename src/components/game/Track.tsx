@@ -17,6 +17,12 @@ export function groundCentre(route: Route): CentreFn {
 }
 
 export function Track({ route }: { route: Route }) {
+  const glowTex = useMemo(() => glowTexture(), []);
+  const glowGeo = useMemo(() => {
+    const g = new THREE.PlaneGeometry(24, 24);
+    g.rotateX(-Math.PI / 2);
+    return g;
+  }, []);
   const roadTex = useMemo(() => {
     const t = roadTexture();
     const c = t.clone();
