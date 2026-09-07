@@ -18,11 +18,6 @@ export function groundCentre(route: Route): CentreFn {
 
 export function Track({ route }: { route: Route }) {
   const glowTex = useMemo(() => glowTexture(), []);
-  const glowGeo = useMemo(() => {
-    const g = new THREE.PlaneGeometry(24, 24);
-    g.rotateX(-Math.PI / 2);
-    return g;
-  }, []);
   const roadTex = useMemo(() => {
     const t = roadTexture();
     const c = t.clone();
@@ -225,7 +220,8 @@ export function Track({ route }: { route: Route }) {
         <boxGeometry args={[3.2, 0.22, 0.7]} />
         <meshStandardMaterial color="#fff3d6" emissive="#ffdca8" emissiveIntensity={6} toneMapped={false} />
       </Batch>
-      <Batch items={furniture.glows} geometry={glowGeo}>
+      <Batch items={furniture.glows} rotX={-Math.PI / 2}>
+        <planeGeometry args={[26, 26]} />
         <meshBasicMaterial
           map={glowTex}
           transparent
@@ -241,7 +237,8 @@ export function Track({ route }: { route: Route }) {
         <boxGeometry args={[0.5, 0.18, 6]} />
         <meshStandardMaterial color="#cfe8ff" emissive="#9fd8ff" emissiveIntensity={5} toneMapped={false} />
       </Batch>
-      <Batch items={furniture.deckGlows} geometry={glowGeo}>
+      <Batch items={furniture.deckGlows} rotX={-Math.PI / 2}>
+        <planeGeometry args={[22, 22]} />
         <meshBasicMaterial
           map={glowTex}
           color="#bfe4ff"

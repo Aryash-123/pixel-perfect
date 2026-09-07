@@ -14,11 +14,13 @@ export function Batch({
   items,
   children,
   castShadow,
+  rotX,
   geometry,
 }: {
   items: Placement[];
   children: ReactNode;
   castShadow?: boolean;
+  rotX?: number;
   geometry?: THREE.BufferGeometry;
 }) {
   const ref = useRef<THREE.InstancedMesh>(null);
@@ -28,6 +30,7 @@ export function Batch({
     items.forEach((it, i) => {
       dummy.position.set(it.pos[0], it.pos[1], it.pos[2]);
       dummy.rotation.set(0, it.rotY ?? 0, 0);
+      if (rotX) dummy.rotateX(rotX);
       const sc = it.scale ?? [1, 1, 1];
       dummy.scale.set(sc[0], sc[1], sc[2]);
       dummy.updateMatrix();
@@ -36,7 +39,7 @@ export function Batch({
     mesh.count = items.length;
     mesh.instanceMatrix.needsUpdate = true;
     mesh.computeBoundingSphere();
-  }, [items]);
+  }, [items, rotX]);
 
   if (items.length === 0) return null;
   return (
