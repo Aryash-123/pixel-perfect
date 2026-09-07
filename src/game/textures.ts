@@ -129,3 +129,15 @@ export function neonTexture(variant: number) {
     ctx.fillText(["SUSHI", "HOTEL", "CLUB", "RAMEN", "TOKYO"][variant % 5]!, 128, 68);
   });
 }
+
+/** Soft radial falloff used for lamp glow pools on the asphalt. */
+export function glowTexture() {
+  return canvasTex("glow", 128, 128, (ctx) => {
+    const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, "rgba(255,236,196,0.95)");
+    g.addColorStop(0.45, "rgba(255,222,166,0.35)");
+    g.addColorStop(1, "rgba(255,210,140,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 128, 128);
+  });
+}

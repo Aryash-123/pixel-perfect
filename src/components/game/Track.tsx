@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { Batch, mulberry32, type Placement } from "./Batch";
 import { buildRibbon, buildWall, type CentreFn } from "@/game/ribbon";
 import { branchCentre, ROAD_HALF_WIDTH, sampleAt, worldPos, type Route } from "@/game/route";
-import { checkerTexture, roadTexture, signTexture } from "@/game/textures";
+import { checkerTexture, glowTexture, roadTexture, signTexture } from "@/game/textures";
 
 /** Centreline of the ground route (drifts sideways through every branch). */
 export function groundCentre(route: Route): CentreFn {
@@ -17,6 +17,7 @@ export function groundCentre(route: Route): CentreFn {
 }
 
 export function Track({ route }: { route: Route }) {
+  const glowTex = useMemo(() => glowTexture(), []);
   const roadTex = useMemo(() => {
     const t = roadTexture();
     const c = t.clone();
@@ -210,14 +211,43 @@ export function Track({ route }: { route: Route }) {
         <meshStandardMaterial color="#7fe8ff" emissive="#7fe8ff" emissiveIntensity={2} />
       </Batch>
 
-      {/* street lamps */}
+      {/* street lamps — both sides, with glow pools lighting the asphalt */}
       <Batch items={furniture.lamps}>
         <cylinderGeometry args={[0.14, 0.18, 8, 6]} />
         <meshStandardMaterial color="#3b4358" metalness={0.5} roughness={0.6} />
       </Batch>
       <Batch items={furniture.lampHeads}>
         <boxGeometry args={[3.2, 0.22, 0.7]} />
-        <meshStandardMaterial color="#ffe7bd" emissive="#ffdca8" emissiveIntensity={2.6} />
+        <meshStandardMaterial color="#fff3d6" emissive="#ffdca8" emissiveIntensity={6} toneMapped={false} />
+      </Batch>
+      <Batch items={furniture.glows} rotX={-Math.PI / 2}>
+        <planeGeometry args={[13, 13]} />
+        <meshBasicMaterial
+          map={glowTex}
+          transparent
+          opacity={0.5}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </Batch>
+
+      {/* flyover deck lighting */}
+      <Batch items={furniture.deckLights}>
+        <boxGeometry args={[0.5, 0.18, 6]} />
+        <meshStandardMaterial color="#cfe8ff" emissive="#9fd8ff" emissiveIntensity={5} toneMapped={false} />
+      </Batch>
+      <Batch items={furniture.deckGlows} rotX={-Math.PI / 2}>
+        <planeGeometry args={[12, 12]} />
+        <meshBasicMaterial
+          map={glowTex}
+          color="#bfe4ff"
+          transparent
+          opacity={0.45}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
       </Batch>
 
       {/* overhead gantries */}

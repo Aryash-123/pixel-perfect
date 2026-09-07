@@ -156,9 +156,9 @@ export function RaceScene({
     >
       <color attach="background" args={[route.race.sky.bottom]} />
       <fog attach="fog" args={[route.race.sky.fog, route.race.sky.fogNear, route.race.sky.fogFar]} />
-      <hemisphereLight args={[route.race.sky.top, "#0a0f1e", 0.9]} />
-      <directionalLight position={[-140, 190, 220]} intensity={0.85} color="#9fc4ff" />
-      <ambientLight intensity={0.25} />
+      <hemisphereLight args={[route.race.sky.top, "#1a2338", 1.4]} />
+      <directionalLight position={[-140, 190, 220]} intensity={1.1} color="#9fc4ff" />
+      <ambientLight intensity={0.6} color="#ffe6c4" />
       <SkyDome route={route} />
 
       <Track route={route} />
