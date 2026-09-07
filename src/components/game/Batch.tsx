@@ -14,10 +14,12 @@ export function Batch({
   items,
   children,
   castShadow,
+  geometry,
 }: {
   items: Placement[];
   children: ReactNode;
   castShadow?: boolean;
+  geometry?: THREE.BufferGeometry;
 }) {
   const ref = useRef<THREE.InstancedMesh>(null);
   useLayoutEffect(() => {
@@ -40,7 +42,7 @@ export function Batch({
   return (
     <instancedMesh
       ref={ref}
-      args={[undefined as unknown as THREE.BufferGeometry, undefined as unknown as THREE.Material, items.length]}
+      args={[geometry ?? (undefined as unknown as THREE.BufferGeometry), undefined as unknown as THREE.Material, items.length]}
       castShadow={castShadow ?? false}
       frustumCulled
     >

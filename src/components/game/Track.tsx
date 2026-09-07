@@ -225,8 +225,7 @@ export function Track({ route }: { route: Route }) {
         <boxGeometry args={[3.2, 0.22, 0.7]} />
         <meshStandardMaterial color="#fff3d6" emissive="#ffdca8" emissiveIntensity={6} toneMapped={false} />
       </Batch>
-      <Batch items={furniture.glows}>
-        <primitive object={glowGeo} attach="geometry" />
+      <Batch items={furniture.glows} geometry={glowGeo}>
         <meshBasicMaterial
           map={glowTex}
           transparent
@@ -242,8 +241,7 @@ export function Track({ route }: { route: Route }) {
         <boxGeometry args={[0.5, 0.18, 6]} />
         <meshStandardMaterial color="#cfe8ff" emissive="#9fd8ff" emissiveIntensity={5} toneMapped={false} />
       </Batch>
-      <Batch items={furniture.deckGlows}>
-        <primitive object={glowGeo} attach="geometry" />
+      <Batch items={furniture.deckGlows} geometry={glowGeo}>
         <meshBasicMaterial
           map={glowTex}
           color="#bfe4ff"
