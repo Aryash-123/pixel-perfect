@@ -210,14 +210,43 @@ export function Track({ route }: { route: Route }) {
         <meshStandardMaterial color="#7fe8ff" emissive="#7fe8ff" emissiveIntensity={2} />
       </Batch>
 
-      {/* street lamps */}
+      {/* street lamps — both sides, with glow pools lighting the asphalt */}
       <Batch items={furniture.lamps}>
         <cylinderGeometry args={[0.14, 0.18, 8, 6]} />
         <meshStandardMaterial color="#3b4358" metalness={0.5} roughness={0.6} />
       </Batch>
       <Batch items={furniture.lampHeads}>
         <boxGeometry args={[3.2, 0.22, 0.7]} />
-        <meshStandardMaterial color="#ffe7bd" emissive="#ffdca8" emissiveIntensity={2.6} />
+        <meshStandardMaterial color="#fff3d6" emissive="#ffdca8" emissiveIntensity={6} toneMapped={false} />
+      </Batch>
+      <Batch items={furniture.glows}>
+        <primitive object={glowGeo} attach="geometry" />
+        <meshBasicMaterial
+          map={glowTex}
+          transparent
+          opacity={0.75}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </Batch>
+
+      {/* flyover deck lighting */}
+      <Batch items={furniture.deckLights}>
+        <boxGeometry args={[0.5, 0.18, 6]} />
+        <meshStandardMaterial color="#cfe8ff" emissive="#9fd8ff" emissiveIntensity={5} toneMapped={false} />
+      </Batch>
+      <Batch items={furniture.deckGlows}>
+        <primitive object={glowGeo} attach="geometry" />
+        <meshBasicMaterial
+          map={glowTex}
+          color="#bfe4ff"
+          transparent
+          opacity={0.6}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
       </Batch>
 
       {/* overhead gantries */}
