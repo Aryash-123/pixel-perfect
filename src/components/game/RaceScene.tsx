@@ -463,13 +463,13 @@ function RaceLoop({
 
     const grip = Math.min(1, Math.abs(p.speed) / 9 + 0.12);
     const steerRate = (0.9 + perf.handling * 0.11) * (hand ? 1.5 : 1);
-    if (steerIn !== 0) p.ho += steerIn * steerRate * dt * grip * Math.sign(p.speed || 1);
+    if (steerIn !== 0) p.ho -= steerIn * steerRate * dt * grip * Math.sign(p.speed || 1);
     p.ho *= Math.exp(-(steerIn === 0 ? 3.2 : 1.1) * dt);
     p.ho = Math.max(-0.6, Math.min(0.6, p.ho));
-    p.steer = THREE.MathUtils.lerp(p.steer, steerIn * 0.42, 0.2);
+    p.steer = THREE.MathUtils.lerp(p.steer, -steerIn * 0.42, 0.2);
 
     p.s += p.speed * Math.cos(p.ho) * dt;
-    p.lateral += p.speed * Math.sin(p.ho) * dt;
+    p.lateral -= p.speed * Math.sin(p.ho) * dt;
 
     /* ---- branch decision: which side of the split the player is on */
     let prompt: string | null = null;
