@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { Batch, mulberry32, type Placement } from "./Batch";
 import { buildRibbon, buildWall, type CentreFn } from "@/game/ribbon";
 import { branchCentre, ROAD_HALF_WIDTH, sampleAt, worldPos, type Route } from "@/game/route";
-import { checkerTexture, roadTexture, signTexture } from "@/game/textures";
+import { checkerTexture, glowTexture, roadTexture, signTexture } from "@/game/textures";
 
 /** Centreline of the ground route (drifts sideways through every branch). */
 export function groundCentre(route: Route): CentreFn {
