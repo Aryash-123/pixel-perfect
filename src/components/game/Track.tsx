@@ -221,11 +221,11 @@ export function Track({ route }: { route: Route }) {
         <meshStandardMaterial color="#fff3d6" emissive="#ffdca8" emissiveIntensity={6} toneMapped={false} />
       </Batch>
       <Batch items={furniture.glows} rotX={-Math.PI / 2}>
-        <planeGeometry args={[26, 26]} />
+        <planeGeometry args={[13, 13]} />
         <meshBasicMaterial
           map={glowTex}
           transparent
-          opacity={0.75}
+          opacity={0.5}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           toneMapped={false}
@@ -238,12 +238,12 @@ export function Track({ route }: { route: Route }) {
         <meshStandardMaterial color="#cfe8ff" emissive="#9fd8ff" emissiveIntensity={5} toneMapped={false} />
       </Batch>
       <Batch items={furniture.deckGlows} rotX={-Math.PI / 2}>
-        <planeGeometry args={[22, 22]} />
+        <planeGeometry args={[12, 12]} />
         <meshBasicMaterial
           map={glowTex}
           color="#bfe4ff"
           transparent
-          opacity={0.6}
+          opacity={0.45}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           toneMapped={false}
