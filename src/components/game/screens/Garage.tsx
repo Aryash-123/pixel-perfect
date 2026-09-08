@@ -32,7 +32,7 @@ export function Garage({
   onUpgrade: (kind: "engine" | "handling" | "brakes") => void;
 }) {
   const [previewId, setPreviewId] = useState(save.selectedCar);
-  const car = getCar(save.ownedCars.includes(previewId) ? previewId : previewId);
+  const car = getCar(previewId);
   const owned = save.ownedCars.includes(car.id);
   const isActive = car.id === save.selectedCar;
   const paintId = save.paint[car.id] ?? "blue";
