@@ -98,10 +98,17 @@ export function Garage({
                   >
                     {save.cash < car.price ? "NOT ENOUGH CASH" : "BUY"}
                   </button>
-                ) : (
+                ) : isActive ? (
                   <div className="vc-display text-[11px] tracking-[0.22em] text-[color:var(--vc-neon)]">
                     ACTIVE CAR
                   </div>
+                ) : (
+                  <button
+                    onClick={() => onSelect(car.id)}
+                    className="vc-display rounded-lg bg-[color:var(--vc-neon)] px-6 py-3 text-[11px] font-bold tracking-[0.22em] text-[#04141a]"
+                  >
+                    DRIVE THIS
+                  </button>
                 )}
               </div>
 
