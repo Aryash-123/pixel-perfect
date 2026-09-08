@@ -469,7 +469,10 @@ function RaceLoop({
     p.steer = THREE.MathUtils.lerp(p.steer, -steerIn * 0.42, 0.2);
 
     p.s += p.speed * Math.cos(p.ho) * dt;
-    p.lateral -= p.speed * Math.sin(p.ho) * dt;
+    // `worldPos` defines positive lateral on the route's left side. A right
+    // steering input produces a negative heading offset, so lateral movement
+    // must use the same signed sine to move the car toward screen-right.
+    p.lateral += p.speed * Math.sin(p.ho) * dt;
 
     /* ---- branch decision: which side of the split the player is on */
     let prompt: string | null = null;
