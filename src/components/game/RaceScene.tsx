@@ -114,7 +114,7 @@ export function RaceScene({
 
   useEffect(() => {
     const rand = mulberry32(99 + raceId.length);
-    const count = Math.round(26 * route.race.trafficDensity);
+    const count = Math.round(26 * 0.6 * route.race.trafficDensity);
     traffic.current = Array.from({ length: count }, (_, i) => {
       const dir: 1 | -1 = i % 3 === 0 ? -1 : 1;
       const lane = Math.floor(rand() * 3);
