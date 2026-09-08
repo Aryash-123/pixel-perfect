@@ -1,4 +1,4 @@
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import type * as THREE from "three";
 import { CarMesh } from "../CarMesh";
@@ -31,8 +31,10 @@ export function Garage({
   onWheels: (wheelId: string) => void;
   onUpgrade: (kind: "engine" | "handling" | "brakes") => void;
 }) {
-  const car = getCar(save.selectedCar);
+  const [previewId, setPreviewId] = useState(save.selectedCar);
+  const car = getCar(previewId);
   const owned = save.ownedCars.includes(car.id);
+  const isActive = car.id === save.selectedCar;
   const paintId = save.paint[car.id] ?? "blue";
   const wheelId = save.wheels[car.id] ?? "standard";
   const up = upgradesFor(save, car.id);
@@ -96,10 +98,17 @@ export function Garage({
                   >
                     {save.cash < car.price ? "NOT ENOUGH CASH" : "BUY"}
                   </button>
-                ) : (
+                ) : isActive ? (
                   <div className="vc-display text-[11px] tracking-[0.22em] text-[color:var(--vc-neon)]">
                     ACTIVE CAR
                   </div>
+                ) : (
+                  <button
+                    onClick={() => onSelect(car.id)}
+                    className="vc-display rounded-lg bg-[color:var(--vc-neon)] px-6 py-3 text-[11px] font-bold tracking-[0.22em] text-[#04141a]"
+                  >
+                    DRIVE THIS
+                  </button>
                 )}
               </div>
 
