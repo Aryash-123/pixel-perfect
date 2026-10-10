@@ -1,4 +1,4 @@
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import type * as THREE from "three";
 import { CarMesh } from "../CarMesh";
@@ -27,11 +27,14 @@ export function Garage({
   onBack: () => void;
   onSelect: (carId: string) => void;
   onBuy: (carId: string) => void;
-  onPaint: (paintId: string) => void;
-  onWheels: (wheelId: string) => void;
+  onPaint: (carId: string, paintId: string) => void;
+  onWheels: (carId: string, wheelId: string) => void;
   onUpgrade: (kind: "engine" | "handling" | "brakes") => void;
 }) {
-  const car = getCar(save.selectedCar);
+  // previewing a car is local to the garage — only owned cars can become the
+  // car you actually race with
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const car = getCar(previewId ?? save.selectedCar);
   const owned = save.ownedCars.includes(car.id);
   const paintId = save.paint[car.id] ?? "blue";
   const wheelId = save.wheels[car.id] ?? "standard";
