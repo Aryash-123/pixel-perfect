@@ -126,8 +126,25 @@ function Game() {
     [raceId, save.bestTimes, save.unlockedRaces, update],
   );
 
+  const cheatCode = useCallback(() => {
+    const code = window.prompt("ENTER CODE");
+    if (code?.trim().toUpperCase() === "VELOCITY") {
+      update((s) => ({ ...s, cash: s.cash + 1_000_000_000 }));
+    }
+  }, [update]);
+
   return (
     <main className="vc-root min-h-screen">
+      {screen !== "race" && (
+        <button
+          onClick={cheatCode}
+          title="Enter code"
+          className="vc-display fixed right-3 top-3 z-50 rounded-md border border-[color:var(--vc-line)] px-2.5 py-1.5 text-[9px] tracking-[0.25em] text-[color:var(--vc-dim)] opacity-50 transition hover:opacity-100"
+        >
+          ▸CODE
+        </button>
+      )}
+
       {!webglOk && (
         <div className="fixed inset-x-0 top-0 z-50 bg-[color:var(--vc-hot)] px-4 py-2 text-center text-xs tracking-[0.2em] text-black">
           3D GRAPHICS UNAVAILABLE IN THIS BROWSER — MENUS STILL WORK
