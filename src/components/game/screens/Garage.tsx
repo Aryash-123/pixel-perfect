@@ -1,4 +1,4 @@
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import type * as THREE from "three";
 import { CarMesh } from "../CarMesh";
@@ -27,11 +27,14 @@ export function Garage({
   onBack: () => void;
   onSelect: (carId: string) => void;
   onBuy: (carId: string) => void;
-  onPaint: (paintId: string) => void;
-  onWheels: (wheelId: string) => void;
+  onPaint: (carId: string, paintId: string) => void;
+  onWheels: (carId: string, wheelId: string) => void;
   onUpgrade: (kind: "engine" | "handling" | "brakes") => void;
 }) {
-  const car = getCar(save.selectedCar);
+  // previewing a car is local to the garage — only owned cars can become the
+  // car you actually race with
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const car = getCar(previewId ?? save.selectedCar);
   const owned = save.ownedCars.includes(car.id);
   const paintId = save.paint[car.id] ?? "blue";
   const wheelId = save.wheels[car.id] ?? "standard";
@@ -91,15 +94,25 @@ export function Garage({
                 {!owned ? (
                   <button
                     disabled={save.cash < car.price}
-                    onClick={() => onBuy(car.id)}
+                    onClick={() => {
+                      setPreviewId(car.id);
+                      onBuy(car.id);
+                    }}
                     className="vc-display rounded-lg px-6 py-3 text-[11px] font-bold tracking-[0.22em] disabled:bg-[rgba(255,255,255,0.08)] disabled:text-[color:var(--vc-dim)] enabled:bg-[color:var(--vc-gold)] enabled:text-[#191203]"
                   >
                     {save.cash < car.price ? "NOT ENOUGH CASH" : "BUY"}
                   </button>
-                ) : (
+                ) : save.selectedCar === car.id ? (
                   <div className="vc-display text-[11px] tracking-[0.22em] text-[color:var(--vc-neon)]">
                     ACTIVE CAR
                   </div>
+                ) : (
+                  <button
+                    onClick={() => onSelect(car.id)}
+                    className="vc-display rounded-lg border border-[color:var(--vc-neon)] px-6 py-3 text-[11px] font-bold tracking-[0.22em] text-[color:var(--vc-neon)] transition-colors hover:bg-[rgba(0,229,255,0.08)]"
+                  >
+                    SELECT
+                  </button>
                 )}
               </div>
 
@@ -158,7 +171,10 @@ export function Garage({
                   return (
                     <button
                       key={c.id}
-                      onClick={() => onSelect(c.id)}
+                      onClick={() => {
+                        setPreviewId(c.id);
+                        if (isOwned) onSelect(c.id);
+                      }}
                       className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left transition-colors ${
                         active
                           ? "border-[color:var(--vc-neon)] bg-[rgba(0,229,255,0.08)]"
@@ -185,42 +201,46 @@ export function Garage({
               </div>
             </Panel>
 
-            <Panel title="PAINT">
-              <div className="flex flex-wrap gap-2">
-                {PAINTS.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => onPaint(p.id)}
-                    title={p.name}
-                    className={`h-9 w-9 rounded-full border-2 transition-transform hover:scale-110 ${
-                      paintId === p.id ? "border-[color:var(--vc-neon)]" : "border-white/15"
-                    }`}
-                    style={{ background: p.hex }}
-                  />
-                ))}
-              </div>
-            </Panel>
+            {owned && (
+              <>
+                <Panel title="PAINT">
+                  <div className="flex flex-wrap gap-2">
+                    {PAINTS.map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => onPaint(car.id, p.id)}
+                        title={p.name}
+                        className={`h-9 w-9 rounded-full border-2 transition-transform hover:scale-110 ${
+                          paintId === p.id ? "border-[color:var(--vc-neon)]" : "border-white/15"
+                        }`}
+                        style={{ background: p.hex }}
+                      />
+                    ))}
+                  </div>
+                </Panel>
 
-            <Panel title="WHEELS">
-              <div className="grid grid-cols-2 gap-2">
-                {WHEELS.map((w) => (
-                  <button
-                    key={w.id}
-                    onClick={() => onWheels(w.id)}
-                    className={`rounded-lg border px-3 py-2 text-left text-[10px] tracking-[0.2em] transition-colors ${
-                      wheelId === w.id
-                        ? "border-[color:var(--vc-neon)] text-[color:var(--vc-neon)]"
-                        : "border-[color:var(--vc-line)] text-[color:var(--vc-dim)] hover:text-[color:var(--vc-text)]"
-                    }`}
-                  >
-                    {w.name}
-                    <span className="mt-0.5 block text-[9px] text-[color:var(--vc-dim)]">
-                      +{w.handling.toFixed(1)} GRIP
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </Panel>
+                <Panel title="WHEELS">
+                  <div className="grid grid-cols-2 gap-2">
+                    {WHEELS.map((w) => (
+                      <button
+                        key={w.id}
+                        onClick={() => onWheels(car.id, w.id)}
+                        className={`rounded-lg border px-3 py-2 text-left text-[10px] tracking-[0.2em] transition-colors ${
+                          wheelId === w.id
+                            ? "border-[color:var(--vc-neon)] text-[color:var(--vc-neon)]"
+                            : "border-[color:var(--vc-line)] text-[color:var(--vc-dim)] hover:text-[color:var(--vc-text)]"
+                        }`}
+                      >
+                        {w.name}
+                        <span className="mt-0.5 block text-[9px] text-[color:var(--vc-dim)]">
+                          +{w.handling.toFixed(1)} GRIP
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </Panel>
+              </>
+            )}
           </div>
         </div>
       </div>
