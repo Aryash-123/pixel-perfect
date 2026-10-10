@@ -171,11 +171,11 @@ function Game() {
               };
             })
           }
-          onPaint={(pid) =>
-            update((s) => ({ ...s, paint: { ...s.paint, [s.selectedCar]: pid } }))
+          onPaint={(carId, pid) =>
+            update((s) => ({ ...s, paint: { ...s.paint, [carId]: pid } }))
           }
-          onWheels={(wid) =>
-            update((s) => ({ ...s, wheels: { ...s.wheels, [s.selectedCar]: wid } }))
+          onWheels={(carId, wid) =>
+            update((s) => ({ ...s, wheels: { ...s.wheels, [carId]: wid } }))
           }
           onUpgrade={(kind) =>
             update((s) => {

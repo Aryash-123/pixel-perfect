@@ -201,42 +201,46 @@ export function Garage({
               </div>
             </Panel>
 
-            <Panel title="PAINT">
-              <div className="flex flex-wrap gap-2">
-                {PAINTS.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => onPaint(p.id)}
-                    title={p.name}
-                    className={`h-9 w-9 rounded-full border-2 transition-transform hover:scale-110 ${
-                      paintId === p.id ? "border-[color:var(--vc-neon)]" : "border-white/15"
-                    }`}
-                    style={{ background: p.hex }}
-                  />
-                ))}
-              </div>
-            </Panel>
+            {owned && (
+              <>
+                <Panel title="PAINT">
+                  <div className="flex flex-wrap gap-2">
+                    {PAINTS.map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => onPaint(car.id, p.id)}
+                        title={p.name}
+                        className={`h-9 w-9 rounded-full border-2 transition-transform hover:scale-110 ${
+                          paintId === p.id ? "border-[color:var(--vc-neon)]" : "border-white/15"
+                        }`}
+                        style={{ background: p.hex }}
+                      />
+                    ))}
+                  </div>
+                </Panel>
 
-            <Panel title="WHEELS">
-              <div className="grid grid-cols-2 gap-2">
-                {WHEELS.map((w) => (
-                  <button
-                    key={w.id}
-                    onClick={() => onWheels(w.id)}
-                    className={`rounded-lg border px-3 py-2 text-left text-[10px] tracking-[0.2em] transition-colors ${
-                      wheelId === w.id
-                        ? "border-[color:var(--vc-neon)] text-[color:var(--vc-neon)]"
-                        : "border-[color:var(--vc-line)] text-[color:var(--vc-dim)] hover:text-[color:var(--vc-text)]"
-                    }`}
-                  >
-                    {w.name}
-                    <span className="mt-0.5 block text-[9px] text-[color:var(--vc-dim)]">
-                      +{w.handling.toFixed(1)} GRIP
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </Panel>
+                <Panel title="WHEELS">
+                  <div className="grid grid-cols-2 gap-2">
+                    {WHEELS.map((w) => (
+                      <button
+                        key={w.id}
+                        onClick={() => onWheels(car.id, w.id)}
+                        className={`rounded-lg border px-3 py-2 text-left text-[10px] tracking-[0.2em] transition-colors ${
+                          wheelId === w.id
+                            ? "border-[color:var(--vc-neon)] text-[color:var(--vc-neon)]"
+                            : "border-[color:var(--vc-line)] text-[color:var(--vc-dim)] hover:text-[color:var(--vc-text)]"
+                        }`}
+                      >
+                        {w.name}
+                        <span className="mt-0.5 block text-[9px] text-[color:var(--vc-dim)]">
+                          +{w.handling.toFixed(1)} GRIP
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </Panel>
+              </>
+            )}
           </div>
         </div>
       </div>
