@@ -94,15 +94,25 @@ export function Garage({
                 {!owned ? (
                   <button
                     disabled={save.cash < car.price}
-                    onClick={() => onBuy(car.id)}
+                    onClick={() => {
+                      setPreviewId(car.id);
+                      onBuy(car.id);
+                    }}
                     className="vc-display rounded-lg px-6 py-3 text-[11px] font-bold tracking-[0.22em] disabled:bg-[rgba(255,255,255,0.08)] disabled:text-[color:var(--vc-dim)] enabled:bg-[color:var(--vc-gold)] enabled:text-[#191203]"
                   >
                     {save.cash < car.price ? "NOT ENOUGH CASH" : "BUY"}
                   </button>
-                ) : (
+                ) : save.selectedCar === car.id ? (
                   <div className="vc-display text-[11px] tracking-[0.22em] text-[color:var(--vc-neon)]">
                     ACTIVE CAR
                   </div>
+                ) : (
+                  <button
+                    onClick={() => onSelect(car.id)}
+                    className="vc-display rounded-lg border border-[color:var(--vc-neon)] px-6 py-3 text-[11px] font-bold tracking-[0.22em] text-[color:var(--vc-neon)] transition-colors hover:bg-[rgba(0,229,255,0.08)]"
+                  >
+                    SELECT
+                  </button>
                 )}
               </div>
 
@@ -161,7 +171,10 @@ export function Garage({
                   return (
                     <button
                       key={c.id}
-                      onClick={() => onSelect(c.id)}
+                      onClick={() => {
+                        setPreviewId(c.id);
+                        if (isOwned) onSelect(c.id);
+                      }}
                       className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left transition-colors ${
                         active
                           ? "border-[color:var(--vc-neon)] bg-[rgba(0,229,255,0.08)]"
